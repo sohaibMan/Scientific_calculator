@@ -3,16 +3,16 @@ package com.example.scientific_calculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
+//import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.scientific_calculator.R;
+//import com.example.scientific_calculator.R;
 
 public class MainActivity extends AppCompatActivity {
     Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, bdot, bpi, bequal, bplus, bmin, bmul, bdiv, binv, bsqrt, bsquare, bfact, bln, blog, btan, bcos, bsin, bb1, bb2, bc, bac;
     TextView tvmain, tvsec;
-    String pi = "3.14159265";
+    double pi = Math.PI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,201 +54,65 @@ public class MainActivity extends AppCompatActivity {
         tvsec = findViewById(R.id.tvsec);
 
         //onclick listeners
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "1");
-            }
+        b1.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "1"));
+        b2.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "2"));
+        b3.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "3"));
+        b4.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "4"));
+        b5.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "5"));
+        b6.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "6"));
+        b7.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "7"));
+        b8.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "8"));
+        b9.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "9"));
+        b0.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "0"));
+        bdot.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "."));
+        bac.setOnClickListener(v -> {
+            tvmain.setText("");
+            tvsec.setText("");
         });
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "2");
-            }
+        bc.setOnClickListener(v -> {
+            String val = tvmain.getText().toString();
+            val = val.substring(0, val.length() - 1);
+            tvmain.setText(val);
         });
-        b3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "3");
-            }
+        bplus.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "+"));
+        bmin.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "-"));
+        bmul.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "×"));
+        bdiv.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "÷"));
+        bsqrt.setOnClickListener(v -> {
+            String val = tvmain.getText().toString();
+            double r = Math.sqrt(Double.parseDouble(val));
+            tvmain.setText(String.valueOf(r));
         });
-        b4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "4");
-            }
+        bb1.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "("));
+        bb2.setOnClickListener(v -> tvmain.setText(tvmain.getText() + ")"));
+        bpi.setOnClickListener(v -> {
+            tvsec.setText(bpi.getText());
+            tvmain.setText(tvmain.getText() + Double.toString(pi));
         });
-        b5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "5");
-            }
+        bsin.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "sin"));
+        bcos.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "cos"));
+        btan.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "tan"));
+        binv.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "^" + "(-1)"));
+        bfact.setOnClickListener(v -> {
+            int val = Integer.parseInt(tvmain.getText().toString());
+            int fact = factorial(val);
+            tvmain.setText(String.valueOf(fact));
+            tvsec.setText(val + "!");
         });
-        b6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "6");
-            }
+        bsquare.setOnClickListener(v -> {
+            double d = Double.parseDouble(tvmain.getText().toString());
+            double square = d * d;
+            tvmain.setText(String.valueOf(square));
+            tvsec.setText(d + "²");
         });
-        b7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "7");
-            }
-        });
-        b8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "8");
-            }
-        });
-        b9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "9");
-            }
-        });
-        b0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "0");
-            }
-        });
-        bdot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + ".");
-            }
-        });
-        bac.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText("");
-                tvsec.setText("");
-            }
-        });
-        bc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String val = tvmain.getText().toString();
-                val = val.substring(0, val.length() - 1);
-                tvmain.setText(val);
-            }
-        });
-        bplus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "+");
-            }
-        });
-        bmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "-");
-            }
-        });
-        bmul.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "×");
-            }
-        });
-        bdiv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "÷");
-            }
-        });
-        bsqrt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String val = tvmain.getText().toString();
-                double r = Math.sqrt(Double.parseDouble(val));
-                tvmain.setText(String.valueOf(r));
-            }
-        });
-        bb1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "(");
-            }
-        });
-        bb2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + ")");
-            }
-        });
-        bpi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvsec.setText(bpi.getText());
-                tvmain.setText(tvmain.getText() + pi);
-            }
-        });
-        bsin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "sin");
-            }
-        });
-        bcos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "cos");
-            }
-        });
-        btan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "tan");
-            }
-        });
-        binv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "^" + "(-1)");
-            }
-        });
-        bfact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int val = Integer.parseInt(tvmain.getText().toString());
-                int fact = factorial(val);
-                tvmain.setText(String.valueOf(fact));
-                tvsec.setText(val + "!");
-            }
-        });
-        bsquare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double d = Double.parseDouble(tvmain.getText().toString());
-                double square = d * d;
-                tvmain.setText(String.valueOf(square));
-                tvsec.setText(d + "²");
-            }
-        });
-        bln.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "ln");
-            }
-        });
-        blog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "log");
-            }
-        });
-        bequal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String val = tvmain.getText().toString();
-                String replacedstr = val.replace('÷', '/').replace('×', '*');
-                double result = eval(replacedstr);
-                tvmain.setText(String.valueOf(result));
-                tvsec.setText(val);
-            }
+        bln.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "ln"));
+        blog.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "log"));
+        bequal.setOnClickListener(v -> {
+            String val = tvmain.getText().toString();
+            String replacedstr = val.replace('÷', '/').replace('×', '*');
+            double result = eval(replacedstr);
+            tvmain.setText(String.valueOf(result));
+            tvsec.setText(val);
         });
 
     }
@@ -324,13 +188,28 @@ public class MainActivity extends AppCompatActivity {
                     while (ch >= 'a' && ch <= 'z') nextChar();
                     String func = str.substring(startPos, this.pos);
                     x = parseFactor();
-                    if (func.equals("sqrt")) x = Math.sqrt(x);
-                    else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
-                    else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
-                    else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
-                    else if (func.equals("log")) x = Math.log10(x);
-                    else if (func.equals("ln")) x = Math.log(x);
-                    else throw new RuntimeException("Unknown function: " + func);
+                    switch (func) {
+                        case "sqrt":
+                            x = Math.sqrt(x);
+                            break;
+                        case "sin":
+                            x = Math.sin(Math.toRadians(x));
+                            break;
+                        case "cos":
+                            x = Math.cos(Math.toRadians(x));
+                            break;
+                        case "tan":
+                            x = Math.tan(Math.toRadians(x));
+                            break;
+                        case "log":
+                            x = Math.log10(x);
+                            break;
+                        case "ln":
+                            x = Math.log(x);
+                            break;
+                        default:
+                            throw new RuntimeException("Unknown function: " + func);
+                    }
                 } else {
                     throw new RuntimeException("Unexpected: " + (char) ch);
                 }
