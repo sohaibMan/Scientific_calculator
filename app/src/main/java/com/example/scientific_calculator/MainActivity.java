@@ -1,10 +1,15 @@
 package com.example.scientific_calculator;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.scientific_calculator.R;
@@ -14,10 +19,20 @@ public class MainActivity extends AppCompatActivity {
     TextView tvmain, tvsec;
     String pi = "3.14159265";
 
+    Button bHistorique;
+
+    StringBuilder history = new StringBuilder();
+
+    DatabaseHelper dbHelper;
+
+    private SQLiteDatabase db;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);
@@ -52,6 +67,25 @@ public class MainActivity extends AppCompatActivity {
 
         tvmain = findViewById(R.id.tvmain);
         tvsec = findViewById(R.id.tvsec);
+
+        bHistorique = findViewById(R.id.bHistorique);
+
+        dbHelper = new DatabaseHelper(this);
+        db = dbHelper.getWritableDatabase();
+        bHistorique.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                showHistory();
+                Intent i = new Intent(MainActivity.this, HistoriqueActivity.class);
+                startActivity(i);
+            }
+        });
+
+//        String lineText = getIntent().getStringExtra("lineText");
+//        if (lineText != null) {
+//            TextView textView = findViewById(R.id.tvmain);
+//            textView.setText(lineText);
+//        }
 
         //onclick listeners
         b1.setOnClickListener(new View.OnClickListener() {
@@ -248,9 +282,52 @@ public class MainActivity extends AppCompatActivity {
                 double result = eval(replacedstr);
                 tvmain.setText(String.valueOf(result));
                 tvsec.setText(val);
+
+                history.append(val).append(" = ").append(result).append("\n");
+
+                String insertQuery = "INSERT INTO " + DatabaseHelper.TABLE_HISTORY + " (" +
+                        DatabaseHelper.COLUMN_EXPRESSION+","+DatabaseHelper.COLUMN_RESULT+") VALUES ('"+
+                        val+"', '"+result+"')";
+                db.execSQL(insertQuery);
             }
         });
 
+    }
+
+//    private void showHistory() {
+//        tvsec.setText(history.toString());
+//    }
+
+    private void showHistory() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {DatabaseHelper.COLUMN_EXPRESSION, DatabaseHelper.COLUMN_RESULT};
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_HISTORY,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        LinearLayout linearLayout = new LinearLayout(this);
+
+        StringBuilder historyData = new StringBuilder();
+
+        while (cursor.moveToNext()) {
+            String expression = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_EXPRESSION));
+            double result = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_RESULT));
+
+            historyData.append(expression).append(" = ").append(result).append("\n");
+        }
+
+        cursor.close();
+//        db.close();
+
+//        linearLayout.addView();
+
+        tvsec.setText(historyData.toString());
     }
 
     //factorial function
