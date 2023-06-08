@@ -1,10 +1,15 @@
 package com.example.scientific_calculator;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 //import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 //import com.example.scientific_calculator.R;
@@ -14,10 +19,35 @@ public class MainActivity extends AppCompatActivity {
     TextView tvmain, tvsec;
     double pi = Math.PI;
 
+    Button bHistorique;
+
+    StringBuilder history = new StringBuilder();
+
+    DatabaseHelper dbHelper;
+
+    private SQLiteDatabase db;
+
+    private static final int REQUEST_CODE_HISTORY = 1;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_HISTORY && resultCode == RESULT_OK && data != null) {
+            String expression = data.getStringExtra("expression");
+            expression = expression;
+            tvmain.setText(expression);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Scientific Calculator");
+        }
+
 
         b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);
@@ -53,68 +83,265 @@ public class MainActivity extends AppCompatActivity {
         tvmain = findViewById(R.id.tvmain);
         tvsec = findViewById(R.id.tvsec);
 
-        //onclick listeners
-        b1.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "1"));
-        b2.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "2"));
-        b3.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "3"));
-        b4.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "4"));
-        b5.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "5"));
-        b6.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "6"));
-        b7.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "7"));
-        b8.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "8"));
-        b9.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "9"));
-        b0.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "0"));
-        bdot.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "."));
-        bac.setOnClickListener(v -> {
-            tvmain.setText("");
-            tvsec.setText("");
-        });
-        bc.setOnClickListener(v -> {
-            String val = tvmain.getText().toString();
-            val = val.substring(0, val.length() - 1);
-            tvmain.setText(val);
-        });
-        bplus.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "+"));
-        bmin.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "-"));
-        bmul.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "×"));
-        bdiv.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "÷"));
-        bsqrt.setOnClickListener(v -> {
-            String val = tvmain.getText().toString();
-            double r = Math.sqrt(Double.parseDouble(val));
-            tvmain.setText(String.valueOf(r));
-        });
-        bb1.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "("));
-        bb2.setOnClickListener(v -> tvmain.setText(tvmain.getText() + ")"));
-        bpi.setOnClickListener(v -> {
-            tvsec.setText(bpi.getText());
-            tvmain.setText(tvmain.getText() + Double.toString(pi));
-        });
-        bsin.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "sin"));
-        bcos.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "cos"));
-        btan.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "tan"));
-        binv.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "^" + "(-1)"));
-        bfact.setOnClickListener(v -> {
-            int val = Integer.parseInt(tvmain.getText().toString());
-            int fact = factorial(val);
-            tvmain.setText(String.valueOf(fact));
-            tvsec.setText(val + "!");
-        });
-        bsquare.setOnClickListener(v -> {
-            double d = Double.parseDouble(tvmain.getText().toString());
-            double square = d * d;
-            tvmain.setText(String.valueOf(square));
-            tvsec.setText(d + "²");
-        });
-        bln.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "ln"));
-        blog.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "log"));
-        bequal.setOnClickListener(v -> {
-            String val = tvmain.getText().toString();
-            String replacedstr = val.replace('÷', '/').replace('×', '*');
-            double result = eval(replacedstr);
-            tvmain.setText(String.valueOf(result));
-            tvsec.setText(val);
+        bHistorique = findViewById(R.id.bHistorique);
+
+        dbHelper = new DatabaseHelper(this);
+        db = dbHelper.getWritableDatabase();
+        bHistorique.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, HistoriqueActivity.class);
+                startActivityForResult(i, REQUEST_CODE_HISTORY);
+            }
         });
 
+//        String lineText = getIntent().getStringExtra("lineText");
+//        if (lineText != null) {
+//            TextView textView = findViewById(R.id.tvmain);
+//            textView.setText(lineText);
+//        }
+
+        //onclick listeners
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "1");
+            }
+        });
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "2");
+            }
+        });
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "3");
+            }
+        });
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "4");
+            }
+        });
+        b5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "5");
+            }
+        });
+        b6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "6");
+            }
+        });
+        b7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "7");
+            }
+        });
+        b8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "8");
+            }
+        });
+        b9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "9");
+            }
+        });
+        b0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "0");
+            }
+        });
+        bdot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + ".");
+            }
+        });
+        bac.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText("");
+                tvsec.setText("");
+            }
+        });
+        bc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String val = tvmain.getText().toString();
+                val = val.substring(0, val.length() - 1);
+                tvmain.setText(val);
+            }
+        });
+        bplus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "+");
+            }
+        });
+        bmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "-");
+            }
+        });
+        bmul.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "×");
+            }
+        });
+        bdiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "÷");
+            }
+        });
+        bsqrt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String val = tvmain.getText().toString();
+                double r = Math.sqrt(Double.parseDouble(val));
+                tvmain.setText(String.valueOf(r));
+            }
+        });
+        bb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "(");
+            }
+        });
+        bb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + ")");
+            }
+        });
+        bpi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvsec.setText(bpi.getText());
+                tvmain.setText(tvmain.getText() + pi);
+            }
+        });
+        bsin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "sin");
+            }
+        });
+        bcos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "cos");
+            }
+        });
+        btan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "tan");
+            }
+        });
+        binv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "^" + "(-1)");
+            }
+        });
+        bfact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int val = Integer.parseInt(tvmain.getText().toString());
+                int fact = factorial(val);
+                tvmain.setText(String.valueOf(fact));
+                tvsec.setText(val + "!");
+            }
+        });
+        bsquare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double d = Double.parseDouble(tvmain.getText().toString());
+                double square = d * d;
+                tvmain.setText(String.valueOf(square));
+                tvsec.setText(d + "²");
+            }
+        });
+        bln.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "ln");
+            }
+        });
+        blog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvmain.setText(tvmain.getText() + "log");
+            }
+        });
+        bequal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String val = tvmain.getText().toString();
+                String replacedstr = val.replace('÷', '/').replace('×', '*');
+                double result = eval(replacedstr);
+                tvmain.setText(String.valueOf(result));
+                tvsec.setText(val);
+
+                history.append(val).append(" = ").append(result).append("\n");
+
+                String insertQuery = "INSERT INTO " + DatabaseHelper.TABLE_HISTORY + " (" +
+                        DatabaseHelper.COLUMN_EXPRESSION+","+DatabaseHelper.COLUMN_RESULT+") VALUES ('"+
+                        val+"', '"+result+"')";
+                db.execSQL(insertQuery);
+            }
+        });
+
+    }
+
+//    private void showHistory() {
+//        tvsec.setText(history.toString());
+//    }
+
+    private void showHistory() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {DatabaseHelper.COLUMN_EXPRESSION, DatabaseHelper.COLUMN_RESULT};
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_HISTORY,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        LinearLayout linearLayout = new LinearLayout(this);
+
+        StringBuilder historyData = new StringBuilder();
+
+        while (cursor.moveToNext()) {
+            String expression = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_EXPRESSION));
+            double result = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_RESULT));
+
+            historyData.append(expression).append(" = ").append(result).append("\n");
+        }
+
+        cursor.close();
+//        db.close();
+
+//        linearLayout.addView();
+
+        tvsec.setText(historyData.toString());
     }
 
     //factorial function
