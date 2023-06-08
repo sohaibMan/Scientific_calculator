@@ -1,29 +1,3 @@
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:orientation="vertical"-->
-<!--    android:weightSum="10"-->
-<!--    tools:context=".MainActivity">-->
-
-
-<!--    <LinearLayout-->
-<!--        style="@style/FormItem"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal">-->
-<!--    <TextView-->
-<!--        style="@style/FormLabel"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="@dimen/default_element_height"-->
-<!--        android:text="@string/name_label"-->
-<!--        />-->
-
-<!--    </LinearLayout>-->
-
-<!--</LinearLayout>-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -32,7 +6,6 @@
     android:orientation="vertical"
     android:weightSum="10"
     tools:context=".HistoriqueActivity">
-
 
     <TextView
         android:id="@+id/text_view_id"
@@ -45,6 +18,22 @@
         android:layout_margin="20dp"
         android:text="History" >
     </TextView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/scroll_view_description">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
 
 <!--    <LinearLayout-->
 <!--        android:id="@+id/line1"-->
@@ -61,16 +50,15 @@
 
 <!--    </LinearLayout>-->
 
-        <TextView
-        android:id="@+id/tvsec"
-        android:layout_width="match_parent"
-        android:layout_height="591dp"
-        android:layout_weight="1"
-        android:background="#fff"
-        android:padding="10dp"
-        android:textAlignment="viewEnd"
-        android:textColor="#A8A8A8"
-        android:textSize="30sp"></TextView>
+<!--        <TextView-->
+<!--        android:id="@+id/tvsec"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:background="#fff"-->
+<!--        android:padding="10dp"-->
+<!--        android:textAlignment="viewEnd"-->
+<!--        android:textColor="#A8A8A8"-->
+<!--        android:textSize="30sp"></TextView>-->
 
 
-</LinearLayout>

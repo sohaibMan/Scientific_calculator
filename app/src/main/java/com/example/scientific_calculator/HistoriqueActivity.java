@@ -1,43 +1,31 @@
 package com.example.scientific_calculator;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+
 public class HistoriqueActivity extends AppCompatActivity {
 
-    TextView tvsec;
-
-    StringBuilder history = new StringBuilder();
-
-    DatabaseHelper dbHelper;
-
-    private SQLiteDatabase db;
-
     LinearLayout linearLayout;
+    DatabaseHelper dbHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historique);
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        tvsec = findViewById(R.id.tvsec);
-
+        linearLayout = findViewById(R.id.linearLayout);
         dbHelper = new DatabaseHelper(this);
-//        db = dbHelper.getWritableDatabase();
-
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {DatabaseHelper.COLUMN_EXPRESSION, DatabaseHelper.COLUMN_RESULT};
@@ -51,20 +39,98 @@ public class HistoriqueActivity extends AppCompatActivity {
                 null
         );
 
-        StringBuilder historyData = new StringBuilder();
-
         while (cursor.moveToNext()) {
             String expression = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_EXPRESSION));
             double result = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_RESULT));
 
-            historyData.append(expression).append(" = ").append(result).append("\n");
+            createTextView(expression, result);
         }
 
         cursor.close();
-//        db.close();
+    }
 
-        tvsec.setText(historyData.toString());
+    private void createTextView(String expression, double result) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(100)
+        );
+        params.weight = 1;
 
+        TextView textView = new TextView(this);
+        textView.setLayoutParams(params);
+        textView.setBackgroundColor(Color.WHITE);
+        textView.setPadding(dpToPx(10), dpToPx(10), dpToPx(10), dpToPx(10));
+        textView.setGravity(Gravity.END);
+        textView.setTextColor(Color.parseColor("#A8A8A8"));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+
+        String text = expression + " = " + result;
+        textView.setText(text);
+
+        linearLayout.addView(textView);
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+}
+
+
+//public class HistoriqueActivity extends AppCompatActivity {
+//
+//    TextView tvsec;
+//
+//    StringBuilder history = new StringBuilder();
+//
+//    DatabaseHelper dbHelper;
+//
+//    private SQLiteDatabase db;
+//
+//    LinearLayout linearLayout;
+//
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_historique);
+//
+////        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        tvsec = findViewById(R.id.tvsec);
+//
+//        dbHelper = new DatabaseHelper(this);
+////        db = dbHelper.getWritableDatabase();
+//
+//
+//        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//        String[] projection = {DatabaseHelper.COLUMN_EXPRESSION, DatabaseHelper.COLUMN_RESULT};
+//        Cursor cursor = db.query(
+//                DatabaseHelper.TABLE_HISTORY,
+//                projection,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null
+//        );
+//
+//        StringBuilder historyData = new StringBuilder();
+//
+//        while (cursor.moveToNext()) {
+//            String expression = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_EXPRESSION));
+//            double result = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_RESULT));
+//
+//            historyData.append(expression).append(" = ").append(result).append("\n");
+//        }
+//
+//        cursor.close();
+////        db.close();
+//
+//        tvsec.setText(historyData.toString());
+//
+//
+//    }
+//
+//}
 //        tvsec.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -78,10 +144,8 @@ public class HistoriqueActivity extends AppCompatActivity {
 
 //        final TextView helloTextView = (TextView) findViewById(R.id.text_view_id);
 //        helloTextView.setText(R.string.user_greeting);
-    }
 
 
-}
 
 
 //import android.content.ClipData;
