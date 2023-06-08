@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-//import com.example.scientific_calculator.R;
 
 public class MainActivity extends AppCompatActivity {
     Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, bdot, bpi, bequal, bplus, bmin, bmul, bdiv, binv, bsqrt, bsquare, bfact, bln, blog, btan, bcos, bsin, bb1, bb2, bc, bac;
@@ -35,10 +34,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_HISTORY && resultCode == RESULT_OK && data != null) {
             String expression = data.getStringExtra("expression");
-            expression = expression;
+
             tvmain.setText(expression);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,12 +103,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         //onclick listeners
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvmain.setText(tvmain.getText() + "1");
-            }
-        });
+        b1.setOnClickListener(v -> tvmain.setText(tvmain.getText() + "1"));
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,16 +288,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String val = tvmain.getText().toString();
-                String replacedstr = val.replace('÷', '/').replace('×', '*');
-                double result = eval(replacedstr);
+                String replacedStr = val.replace('÷', '/').replace('×', '*').replaceAll("(\\d+)\\(", "$1 *(");
+                // validate user input before validate the expression
+                Validator validator = new Validator();
+                // this code will validate the Parentheses
+                boolean isParenthesesValid = validator.validateParentheses(replacedStr);
+                if (!isParenthesesValid) {
+                    tvsec.setText("Parentheses are not valid");
+                    return;
+                }
+
+                double result = eval(replacedStr);
                 tvmain.setText(String.valueOf(result));
                 tvsec.setText(val);
 
                 history.append(val).append(" = ").append(result).append("\n");
 
                 String insertQuery = "INSERT INTO " + DatabaseHelper.TABLE_HISTORY + " (" +
-                        DatabaseHelper.COLUMN_EXPRESSION+","+DatabaseHelper.COLUMN_RESULT+") VALUES ('"+
-                        val+"', '"+result+"')";
+                        DatabaseHelper.COLUMN_EXPRESSION + "," + DatabaseHelper.COLUMN_RESULT + ") VALUES ('" +
+                        val + "', '" + result + "')";
                 db.execSQL(insertQuery);
             }
         });

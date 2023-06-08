@@ -42,7 +42,8 @@
         android:padding="10dp"
         android:textAlignment="viewEnd"
         android:textColor="#A8A8A8"
-        android:textSize="30sp">
+        android:textSize="30sp"
+        android:gravity="end">
 
     </TextView>
 
@@ -58,7 +59,8 @@
         android:text=""
         android:textAlignment="viewEnd"
         android:textColor="#A8A8A8"
-        android:textSize="50sp">
+        android:textSize="50sp"
+        tools:ignore="RtlCompat">
     </TextView>
 
     <LinearLayout
