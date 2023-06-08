@@ -1,5 +1,6 @@
 package com.example.scientific_calculator;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -49,7 +50,28 @@ public class HistoriqueActivity extends AppCompatActivity {
         cursor.close();
     }
 
-    private void createTextView(String expression, double result) {
+//    private void createTextView(String expression, double result) {
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                dpToPx(100)
+//        );
+//        params.weight = 1;
+//
+//        TextView textView = new TextView(this);
+//        textView.setLayoutParams(params);
+//        textView.setBackgroundColor(Color.WHITE);
+//        textView.setPadding(dpToPx(10), dpToPx(10), dpToPx(10), dpToPx(10));
+//        textView.setGravity(Gravity.END);
+//        textView.setTextColor(Color.parseColor("#A8A8A8"));
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+//
+//        String text = expression + " = " + result;
+//        textView.setText(text);
+//
+//        linearLayout.addView(textView);
+//    }
+
+    private void createTextView(final String expression, double result) {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(100)
@@ -66,6 +88,16 @@ public class HistoriqueActivity extends AppCompatActivity {
 
         String text = expression + " = " + result;
         textView.setText(text);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("expression", expression);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
 
         linearLayout.addView(textView);
     }

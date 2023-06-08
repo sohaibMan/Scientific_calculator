@@ -27,7 +27,17 @@ public class MainActivity extends AppCompatActivity {
 
     private SQLiteDatabase db;
 
+    private static final int REQUEST_CODE_HISTORY = 1;
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_HISTORY && resultCode == RESULT_OK && data != null) {
+            String expression = data.getStringExtra("expression");
+            expression = expression;
+            tvmain.setText(expression);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +85,8 @@ public class MainActivity extends AppCompatActivity {
         bHistorique.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showHistory();
                 Intent i = new Intent(MainActivity.this, HistoriqueActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE_HISTORY);
             }
         });
 
