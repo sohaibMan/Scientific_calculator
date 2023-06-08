@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 //import android.view.View;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tvsec.setText(bpi.getText());
-                tvmain.setText(tvmain.getText() + pi);
+                tvmain.setText(tvmain.getText().toString() + String.valueOf(pi));
             }
         });
         bsin.setOnClickListener(new View.OnClickListener() {
