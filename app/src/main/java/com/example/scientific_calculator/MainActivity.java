@@ -43,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Scientific Calculator");
+        }
+
 
         b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);

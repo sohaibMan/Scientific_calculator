@@ -14,7 +14,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-
+// TODO: -> Add buttons of go back and clear History
+// TODO: -> Changing the theme of the app
+// TODO: -> Add Menu list to go to the History page
 
 public class HistoriqueActivity extends AppCompatActivity {
 
@@ -24,6 +26,11 @@ public class HistoriqueActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historique);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("History");
+        }
 
         linearLayout = findViewById(R.id.linearLayout);
         dbHelper = new DatabaseHelper(this);

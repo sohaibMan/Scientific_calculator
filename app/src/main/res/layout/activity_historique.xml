@@ -7,17 +7,17 @@
     android:weightSum="10"
     tools:context=".HistoriqueActivity">
 
-    <TextView
-        android:id="@+id/text_view_id"
-        android:layout_height="wrap_content"
-        android:layout_width="100dp"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textSize="25dp"
-        android:layout_marginLeft="150dp"
-        android:layout_margin="20dp"
-        android:text="History" >
-    </TextView>
+<!--    <TextView-->
+<!--        android:id="@+id/text_view_id"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="25dp"-->
+<!--        android:layout_marginLeft="150dp"-->
+<!--        android:layout_margin="20dp"-->
+<!--        android:text="History" >-->
+<!--    </TextView>-->
 
     <ScrollView
         android:layout_width="match_parent"
