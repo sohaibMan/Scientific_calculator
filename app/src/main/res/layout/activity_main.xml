@@ -22,13 +22,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bHistorique"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
         android:layout_width="166dp"
         android:layout_height="55dp"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:layout_marginRight="@dimen/fab_margin"
         android:text="Historique"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:textSize="20sp"
         app:cornerRadius="36dp"></com.google.android.material.button.MaterialButton>
 

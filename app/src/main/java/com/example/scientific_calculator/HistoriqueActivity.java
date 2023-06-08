@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
+
 // TODO: -> Add buttons of go back and clear History
 // TODO: -> Changing the theme of the app
 // TODO: -> Add Menu list to go to the History page
@@ -53,6 +55,15 @@ public class HistoriqueActivity extends AppCompatActivity {
 
             createTextView(expression, result);
         }
+
+        MaterialButton clearButton = findViewById(R.id.bHistorique);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearHistory();
+                linearLayout.removeAllViews();
+            }
+        });
 
         cursor.close();
     }
@@ -107,6 +118,12 @@ public class HistoriqueActivity extends AppCompatActivity {
         });
 
         linearLayout.addView(textView);
+    }
+
+    private void clearHistory() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(DatabaseHelper.TABLE_HISTORY, null, null);
+        db.close();
     }
 
     private int dpToPx(int dp) {
