@@ -5,10 +5,10 @@ Tags: Android Studio, Git/GitHub, Java, Mobile App, SQLite Database
 # Scientific Calculator **Documentation**
 
 - This is the online documentation :
-[Scientific Calculator Doc](https://wonderful-hyacinth-976.notion.site/Scientific-Calculator-b71a96d99a674ee1ac088b0328431170)
+[Scientific Calculator Doc](https://lsi2023.notion.site/Scientific-Calculator-b71a96d99a674ee1ac088b0328431170)
 
 <aside>
-💡 This documentation provides an overview about **`scientific calculator`** application for mobile, using Android Studio framework and Java language programming, where this app contains a lot features among them advanced math operations like **`sin`**, **`cos`**, **`log`**, **`ln` ,** as well as **`History`** for all operations.
+💡 This documentation provides an overview about **`scientific calculator`** application for mobile, using Android Studio framework and Java language programming, where this app contains a lot features among them advanced math operations like `sin`, `cos`, `log`, `ln` , as well as **`History`** for all operations.
 
 </aside>
 
